@@ -14,7 +14,7 @@
     "lit-rx": "0.0.2"
   },
   "devDependencies": {
-    "@rxdi/core": "^0.2.36",
+    "@rxdi/core": "^0.3.0",
     "typescript": "^3.5.1"
   },
   "types": "./dist/index.d.ts",
