@@ -1,0 +1,23 @@
+{
+  "name": "@rxdi/lit-html",
+  "version": "0.2.37",
+  "main": "index.js",
+  "author": "Kristiyan Tachev",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rxdi/lit-html"
+  },
+  "dependencies": {
+    "lit-element": "^2.1.0",
+    "lit-html": "^1.1.0",
+    "lit-rx": "0.0.2"
+  },
+  "devDependencies": {
+    "@rxdi/core": "^0.2.36",
+    "typescript": "^3.5.1"
+  },
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
+  "typings": "./dist/index.d.ts"
+}
