@@ -1,9 +1,24 @@
 import { TemplateResult } from 'lit-element';
 interface CustomElementConfig<T> {
-    selector: string;
+    selector?: string;
     template?: (self: T) => TemplateResult;
     style?: string;
     useShadow?: boolean;
 }
-export declare const Component: (config: CustomElementConfig<any>) => (cls: any) => void;
+interface ClassDescriptor {
+    kind: 'class';
+    elements: ClassElement[];
+    finisher?: <T>(clazz: Constructor<T>) => undefined | Constructor<T>;
+}
+interface ClassElement {
+    kind: 'field' | 'method';
+    key: PropertyKey;
+    placement: 'static' | 'prototype' | 'own';
+    initializer?: Function;
+    extras?: ClassElement[];
+    finisher?: <T>(clazz: Constructor<T>) => undefined | Constructor<T>;
+    descriptor?: PropertyDescriptor;
+}
+export declare type Constructor<T> = new (...args: unknown[]) => T;
+export declare const customElement: <T>(tag: string, config?: CustomElementConfig<T>) => (classOrDescriptor: ClassDescriptor | Constructor<HTMLElement>) => void;
 export {};
