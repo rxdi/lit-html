@@ -105,8 +105,19 @@ export const customElement = <T>(tag: string, config: CustomElementConfig<T> = {
   cls.prototype.connectedCallback = function() {
     // Check if element is pure HTMLElement or LitElement
     if (!this.performUpdate) {
-      config.template = config.template.bind(this);
-      const clone = document.importNode(config.template(this).getTemplateElement().content, true);
+            config.template = config.template.bind(this);
+            const clone = document.importNode(config.template(this).getTemplateElement().content, true);
+            if (config.style) {
+              const style = document.createElement('style');
+              style.type = 'text/css';
+              if (style['styleSheet']){
+                  // This is required for IE8 and below.
+                  style['styleSheet'].cssText = config.style.toString();
+                } else {
+                  style.appendChild(document.createTextNode(config.style.toString()));
+              }
+              clone.append(style)
+            }
       if (config.useShadow) {
           this.attachShadow({mode: 'open'}).append(clone);
       } else {

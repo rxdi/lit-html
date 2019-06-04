@@ -61,6 +61,18 @@ export const customElement = (tag, config = {}) => (classOrDescriptor) => {
         if (!this.performUpdate) {
             config.template = config.template.bind(this);
             const clone = document.importNode(config.template(this).getTemplateElement().content, true);
+            if (config.style) {
+                const style = document.createElement('style');
+                style.type = 'text/css';
+                if (style['styleSheet']) {
+                    // This is required for IE8 and below.
+                    style['styleSheet'].cssText = config.style.toString();
+                }
+                else {
+                    style.appendChild(document.createTextNode(config.style.toString()));
+                }
+                clone.append(style);
+            }
             if (config.useShadow) {
                 this.attachShadow({ mode: 'open' }).append(clone);
             }
