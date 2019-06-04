@@ -23,11 +23,14 @@ export const CustomElement = (config: CustomElementConfig) => cls => {
 
   const connectedCallback = cls.prototype.connectedCallback || function() {};
   cls.prototype.connectedCallback = function() {
-    const clone = document.importNode(template.content, true);
-    if (config.useShadow) {
-      this.attachShadow({ mode: 'open' }).appendChild(clone);
-    } else {
-      this.appendChild(clone);
+    // Check if element is pure HTMLElement or LitElement
+    if (!this.performUpdate) {
+      const clone = document.importNode(template.content, true);
+      if (config.useShadow) {
+        this.attachShadow({ mode: 'open' }).appendChild(clone);
+      } else {
+        this.appendChild(clone);
+      }
     }
     connectedCallback.call(this);
   };

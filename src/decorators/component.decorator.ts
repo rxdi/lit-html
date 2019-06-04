@@ -103,12 +103,15 @@ export const customElement = <T>(tag: string, config: CustomElementConfig<T> = {
     OnUpdateFirst.call(this);
   };
   cls.prototype.connectedCallback = function() {
-    config.template = config.template.bind(this);
-    const clone = document.importNode(config.template(this).getTemplateElement().content, true);
-    if (config.useShadow) {
-        this.attachShadow({mode: 'open'}).append(clone);
-    } else {
-        this.appendChild(clone);
+    // Check if element is pure HTMLElement or LitElement
+    if (!this.performUpdate) {
+      config.template = config.template.bind(this);
+      const clone = document.importNode(config.template(this).getTemplateElement().content, true);
+      if (config.useShadow) {
+          this.attachShadow({mode: 'open'}).append(clone);
+      } else {
+          this.appendChild(clone);
+      }
     }
     connectedCallback.call(this);
     OnInit.call(this);
