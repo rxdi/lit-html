@@ -30,6 +30,9 @@ export const customElement = (tag, config = {}) => (classOrDescriptor) => {
     if (!config.template) {
         config.template = cls.prototype.render;
     }
+    if (config.style) {
+        cls.styles = config.style;
+    }
     cls.prototype.render = config.template;
     const render = cls.prototype.render || function () { };
     cls.prototype.disconnectedCallback = function () {

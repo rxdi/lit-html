@@ -1,8 +1,8 @@
-import { TemplateResult } from 'lit-element';
+import { TemplateResult, CSSResult } from 'lit-element';
 interface CustomElementConfig<T> {
     selector?: string;
     template?: (self: T) => TemplateResult;
-    style?: string;
+    style?: CSSResult | string;
     useShadow?: boolean;
 }
 interface ClassDescriptor {

@@ -1,10 +1,10 @@
-import { html, TemplateResult } from 'lit-element';
+import { html, TemplateResult, CSSResult } from 'lit-element';
 import { Component as RxdiComponent } from '@rxdi/core';
 
 interface CustomElementConfig<T> {
   selector?: string;
   template?: (self: T) => TemplateResult;
-  style?: string;
+  style?: CSSResult | string;
   useShadow?: boolean;
 }
 
@@ -69,6 +69,9 @@ export const customElement = <T>(tag: string, config: CustomElementConfig<T> = {
   const firstUpdated = cls.prototype.firstUpdated || function() {};
   if (!config.template) {
     config.template = cls.prototype.render;
+  }
+  if (config.style) {
+    cls.styles = config.style;
   }
   cls.prototype.render = config.template;
   const render = cls.prototype.render || function () {};
