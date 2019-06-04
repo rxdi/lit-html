@@ -6,6 +6,7 @@ interface CustomElementConfig<T> {
   template?: (self: T) => TemplateResult;
   style?: CSSResult | string;
   useShadow?: boolean;
+  extends?: HTMLElementTagNameMap;
 }
 
 // From the TC39 Decorators proposal
