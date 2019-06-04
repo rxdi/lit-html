@@ -65,8 +65,8 @@ const standardCustomElement = (
 export const customElement = <T>(tag: string, config: CustomElementConfig<T> = {} as any) => (
   classOrDescriptor: Constructor<HTMLElement> | ClassDescriptor
 ) => {
-  if (tag.indexOf('-') <= 0) {
-    throw new Error('You need at least 1 dash in the custom element namee!');
+  if (!tag || (tag && tag.indexOf('-') <= 0)) {
+    throw new Error(`You need at least 1 dash in the custom element name! ${classOrDescriptor}`);
   }
   const cls = classOrDescriptor as any;
 
@@ -138,7 +138,7 @@ export const customElement = <T>(tag: string, config: CustomElementConfig<T> = {
 };
 
 
-export const Component = <T>(config: CustomElementConfig<T> = {} as any) => customElement(config.selector, config)
+export const Component = <T>(config: CustomElementConfig<T>) => customElement(config.selector, config)
 
 // @CustomElement2({
 //   selector: 'home-component',

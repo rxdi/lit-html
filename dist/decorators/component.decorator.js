@@ -23,8 +23,8 @@ const standardCustomElement = (tagName, descriptor, options) => {
 //   Object.setPrototypeOf(CustomElement, HTMLElement);
 //   Object.setPrototypeOf(cls, CustomElement);
 exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
-    if (tag.indexOf('-') <= 0) {
-        throw new Error('You need at least 1 dash in the custom element namee!');
+    if (!tag || (tag && tag.indexOf('-') <= 0)) {
+        throw new Error(`You need at least 1 dash in the custom element name! ${classOrDescriptor}`);
     }
     const cls = classOrDescriptor;
     const OnInit = cls.prototype.OnInit || function () { };
@@ -94,7 +94,7 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     }
     core_1.Component()(cls);
 };
-exports.Component = (config = {}) => exports.customElement(config.selector, config);
+exports.Component = (config) => exports.customElement(config.selector, config);
 // @CustomElement2({
 //   selector: 'home-component',
 //   style: '',
