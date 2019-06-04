@@ -85,7 +85,6 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
         connectedCallback.call(this);
         OnInit.call(this);
     };
-    core_1.Component()(cls);
     // window.customElements.define(config.selector, cls);
     if (typeof cls === 'function') {
         legacyCustomElement(tag, cls, { extends: config.extends });
@@ -93,7 +92,9 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     else {
         standardCustomElement(tag, cls, { extends: config.extends });
     }
+    core_1.Component()(cls);
 };
+exports.Component = (config = {}) => exports.customElement(config.selector, config);
 // @CustomElement2({
 //   selector: 'home-component',
 //   style: '',

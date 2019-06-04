@@ -46,3 +46,4 @@ exports.subscribe = lit_html_1.directive((subscribableOrPromiseLike) => (part) =
     }
     subscribableOrPromiseLike.subscribe(cb);
 });
+exports.async = exports.subscribe;

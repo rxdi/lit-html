@@ -9,4 +9,5 @@ declare type SubscribableOrPromiseLike<T> = Subscribable<T> | PromiseLike<T>;
  * @param value A subscribable
  */
 export declare const subscribe: (subscribableOrPromiseLike: SubscribableOrPromiseLike<unknown>) => (part: Part) => void;
+export declare const async: (subscribableOrPromiseLike: SubscribableOrPromiseLike<unknown>) => (part: Part) => void;
 export {};

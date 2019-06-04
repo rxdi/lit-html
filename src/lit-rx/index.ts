@@ -71,3 +71,6 @@ export const subscribe = directive(
     subscribableOrPromiseLike.subscribe(cb);
   }
 );
+
+
+export const async = subscribe;

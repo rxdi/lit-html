@@ -23,4 +23,5 @@ interface ClassElement {
 }
 declare type Constructor<T> = new (...args: unknown[]) => T;
 export declare const customElement: <T>(tag: string, config?: CustomElementConfig<T>) => (classOrDescriptor: ClassDescriptor | Constructor<HTMLElement>) => void;
+export declare const Component: <T>(config?: CustomElementConfig<T>) => (classOrDescriptor: ClassDescriptor | Constructor<HTMLElement>) => void;
 export {};

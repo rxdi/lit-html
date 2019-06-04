@@ -128,15 +128,17 @@ export const customElement = <T>(tag: string, config: CustomElementConfig<T> = {
     connectedCallback.call(this);
     OnInit.call(this);
   };
-
-  RxdiComponent()(cls);
   // window.customElements.define(config.selector, cls);
   if (typeof cls === 'function') {
     legacyCustomElement(tag, cls, { extends: config.extends })
   } else {
     standardCustomElement(tag, cls, { extends: config.extends });
   }
+  RxdiComponent()(cls);
 };
+
+
+export const Component = <T>(config: CustomElementConfig<T> = {} as any) => customElement(config.selector, config)
 
 // @CustomElement2({
 //   selector: 'home-component',
