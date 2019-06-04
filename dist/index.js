@@ -6,5 +6,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./mixins/index"));
 __export(require("./decorators/index"));
 __export(require("./lit-html/lit-html"));
-__export(require("lit-rx"));
+__export(require("./lit-rx/index"));
 __export(require("./lit-element/lit-element"));
