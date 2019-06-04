@@ -1,19 +1,25 @@
 import { Component as RxdiComponent } from '@rxdi/core';
-const legacyCustomElement = (tagName, clazz) => {
-    window.customElements.define(tagName, clazz);
+const legacyCustomElement = (tagName, clazz, options) => {
+    window.customElements.define(tagName, clazz, options);
     return clazz;
 };
-const standardCustomElement = (tagName, descriptor) => {
+const standardCustomElement = (tagName, descriptor, options) => {
     const { kind, elements } = descriptor;
     return {
         kind,
         elements,
         // This callback is called once the class is otherwise fully defined
         finisher(clazz) {
-            window.customElements.define(tagName, clazz);
+            window.customElements.define(tagName, clazz, options);
         }
     };
 };
+// function CustomElement() {
+//   return Reflect.construct(HTMLElement, [], CustomElement);
+// }
+//   Object.setPrototypeOf(CustomElement.prototype, HTMLElement.prototype);
+//   Object.setPrototypeOf(CustomElement, HTMLElement);
+//   Object.setPrototypeOf(cls, CustomElement);
 export const customElement = (tag, config = {}) => (classOrDescriptor) => {
     if (tag.indexOf('-') <= 0) {
         throw new Error('You need at least 1 dash in the custom element namee!');
@@ -65,10 +71,10 @@ export const customElement = (tag, config = {}) => (classOrDescriptor) => {
     RxdiComponent()(cls);
     // window.customElements.define(config.selector, cls);
     if (typeof cls === 'function') {
-        legacyCustomElement(tag, cls);
+        legacyCustomElement(tag, cls, { extends: config.extends });
     }
     else {
-        standardCustomElement(tag, cls);
+        standardCustomElement(tag, cls, { extends: config.extends });
     }
 };
 // @CustomElement2({

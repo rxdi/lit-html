@@ -6,7 +6,7 @@ interface CustomElementConfig<T> {
   template?: (self: T) => TemplateResult;
   style?: CSSResult | string;
   useShadow?: boolean;
-  extends?: HTMLElementTagNameMap;
+  extends?: string;
 }
 
 // From the TC39 Decorators proposal
@@ -30,15 +30,17 @@ export type Constructor<T> = new (...args: unknown[]) => T;
 
 const legacyCustomElement = (
   tagName: string,
-  clazz: Constructor<HTMLElement>
+  clazz: Constructor<HTMLElement>,
+  options: { extends: HTMLElementTagNameMap | string },
 ) => {
-  window.customElements.define(tagName, clazz);
+  window.customElements.define(tagName, clazz, options as ElementDefinitionOptions);
   return clazz;
 };
 
 const standardCustomElement = (
   tagName: string,
-  descriptor: ClassDescriptor
+  descriptor: ClassDescriptor,
+  options: { extends: HTMLElementTagNameMap | string },
 ) => {
   const { kind, elements } = descriptor;
   return {
@@ -46,10 +48,18 @@ const standardCustomElement = (
     elements,
     // This callback is called once the class is otherwise fully defined
     finisher(clazz: Constructor<HTMLElement>) {
-      window.customElements.define(tagName, clazz);
+      window.customElements.define(tagName, clazz, options as ElementDefinitionOptions);
     }
   };
 };
+
+// function CustomElement() {
+//   return Reflect.construct(HTMLElement, [], CustomElement);
+// }
+//   Object.setPrototypeOf(CustomElement.prototype, HTMLElement.prototype);
+//   Object.setPrototypeOf(CustomElement, HTMLElement);
+//   Object.setPrototypeOf(cls, CustomElement);
+
 
 export const customElement = <T>(tag: string, config: CustomElementConfig<T> = {} as any) => (
   classOrDescriptor: Constructor<HTMLElement> | ClassDescriptor
@@ -57,8 +67,8 @@ export const customElement = <T>(tag: string, config: CustomElementConfig<T> = {
   if (tag.indexOf('-') <= 0) {
     throw new Error('You need at least 1 dash in the custom element namee!');
   }
-
   const cls = classOrDescriptor as any;
+
   const OnInit = cls.prototype.OnInit || function() {};
   const OnDestroy = cls.prototype.OnDestroy || function() {};
   const OnUpdate = cls.prototype.OnUpdate || function() {};
@@ -107,9 +117,9 @@ export const customElement = <T>(tag: string, config: CustomElementConfig<T> = {
   RxdiComponent()(cls);
   // window.customElements.define(config.selector, cls);
   if (typeof cls === 'function') {
-    legacyCustomElement(tag, cls)
+    legacyCustomElement(tag, cls, { extends: config.extends })
   } else {
-    standardCustomElement(tag, cls);
+    standardCustomElement(tag, cls, { extends: config.extends });
   }
 };
 

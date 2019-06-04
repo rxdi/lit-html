@@ -4,7 +4,7 @@ interface CustomElementConfig<T> {
     template?: (self: T) => TemplateResult;
     style?: CSSResult | string;
     useShadow?: boolean;
-    extends?: HTMLElementTagNameMap;
+    extends?: string;
 }
 interface ClassDescriptor {
     kind: 'class';
