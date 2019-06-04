@@ -1,4 +1,5 @@
-import { TemplateResult, CSSResult } from 'lit-element';
+import { CSSResult } from '../lit-element/lib/css-tag';
+import { TemplateResult } from '../lit-html/lit-html';
 interface CustomElementConfig<T> {
     selector?: string;
     template?: (self: T) => TemplateResult;
@@ -20,6 +21,6 @@ interface ClassElement {
     finisher?: <T>(clazz: Constructor<T>) => undefined | Constructor<T>;
     descriptor?: PropertyDescriptor;
 }
-export declare type Constructor<T> = new (...args: unknown[]) => T;
+declare type Constructor<T> = new (...args: unknown[]) => T;
 export declare const customElement: <T>(tag: string, config?: CustomElementConfig<T>) => (classOrDescriptor: ClassDescriptor | Constructor<HTMLElement>) => void;
 export {};

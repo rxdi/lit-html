@@ -1,5 +1,6 @@
-import { html, TemplateResult, CSSResult } from 'lit-element';
+import { CSSResult } from '../lit-element/lib/css-tag';
 import { Component as RxdiComponent } from '@rxdi/core';
+import { TemplateResult } from '../lit-html/lit-html';
 
 interface CustomElementConfig<T> {
   selector?: string;
@@ -26,7 +27,7 @@ interface ClassElement {
   finisher?: <T>(clazz: Constructor<T>) => undefined | Constructor<T>;
   descriptor?: PropertyDescriptor;
 }
-export type Constructor<T> = new (...args: unknown[]) => T;
+type Constructor<T> = new (...args: unknown[]) => T;
 
 const legacyCustomElement = (
   tagName: string,

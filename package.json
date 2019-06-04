@@ -9,8 +9,6 @@
     "url": "https://github.com/rxdi/lit-html"
   },
   "dependencies": {
-    "lit-element": "^2.1.0",
-    "lit-html": "^1.1.0",
     "lit-rx": "0.0.2"
   },
   "devDependencies": {

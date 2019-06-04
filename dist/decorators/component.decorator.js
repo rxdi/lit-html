@@ -1,4 +1,6 @@
-import { Component as RxdiComponent } from '@rxdi/core';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const core_1 = require("@rxdi/core");
 const legacyCustomElement = (tagName, clazz, options) => {
     window.customElements.define(tagName, clazz, options);
     return clazz;
@@ -20,7 +22,7 @@ const standardCustomElement = (tagName, descriptor, options) => {
 //   Object.setPrototypeOf(CustomElement.prototype, HTMLElement.prototype);
 //   Object.setPrototypeOf(CustomElement, HTMLElement);
 //   Object.setPrototypeOf(cls, CustomElement);
-export const customElement = (tag, config = {}) => (classOrDescriptor) => {
+exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     if (tag.indexOf('-') <= 0) {
         throw new Error('You need at least 1 dash in the custom element namee!');
     }
@@ -83,7 +85,7 @@ export const customElement = (tag, config = {}) => (classOrDescriptor) => {
         connectedCallback.call(this);
         OnInit.call(this);
     };
-    RxdiComponent()(cls);
+    core_1.Component()(cls);
     // window.customElements.define(config.selector, cls);
     if (typeof cls === 'function') {
         legacyCustomElement(tag, cls, { extends: config.extends });

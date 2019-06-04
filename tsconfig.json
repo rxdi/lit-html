@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
         "declaration": true,
+        "module": "commonjs",
         "target": "es6",
         "baseUrl": ".",
-        "module": "esnext",
         "stripInternal": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
