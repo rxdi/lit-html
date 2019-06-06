@@ -1,6 +1,8 @@
 import { CSSResult } from '../lit-element/lib/css-tag';
-import { Component as RxdiComponent } from '@rxdi/core';
+import { Component as RxdiComponent, Container } from '@rxdi/core';
 import { TemplateResult } from '../lit-html/lit-html';
+import { BehaviorSubject } from 'rxjs';
+import { Outlet } from '@rxdi/router';
 
 interface CustomElementConfig<T> {
   selector?: string;
@@ -32,16 +34,20 @@ type Constructor<T> = new (...args: unknown[]) => T;
 const legacyCustomElement = (
   tagName: string,
   clazz: Constructor<HTMLElement>,
-  options: { extends: HTMLElementTagNameMap | string },
+  options: { extends: HTMLElementTagNameMap | string }
 ) => {
-  window.customElements.define(tagName, clazz, options as ElementDefinitionOptions);
+  window.customElements.define(
+    tagName,
+    clazz,
+    options as ElementDefinitionOptions
+  );
   return clazz;
 };
 
 const standardCustomElement = (
   tagName: string,
   descriptor: ClassDescriptor,
-  options: { extends: HTMLElementTagNameMap | string },
+  options: { extends: HTMLElementTagNameMap | string }
 ) => {
   const { kind, elements } = descriptor;
   return {
@@ -49,7 +55,11 @@ const standardCustomElement = (
     elements,
     // This callback is called once the class is otherwise fully defined
     finisher(clazz: Constructor<HTMLElement>) {
-      window.customElements.define(tagName, clazz, options as ElementDefinitionOptions);
+      window.customElements.define(
+        tagName,
+        clazz,
+        options as ElementDefinitionOptions
+      );
     }
   };
 };
@@ -61,12 +71,22 @@ const standardCustomElement = (
 //   Object.setPrototypeOf(CustomElement, HTMLElement);
 //   Object.setPrototypeOf(cls, CustomElement);
 
+const unfreezeRouterWhenUnmounted = () => {
+  let outlet: Outlet;
+  try {
+    outlet = Container.get<BehaviorSubject<Outlet>>('router-outlet').getValue();
+    outlet.unfreezeRouter();
+  } catch (e) {}
+};
 
-export const customElement = <T>(tag: string, config: CustomElementConfig<T> = {} as any) => (
-  classOrDescriptor: Constructor<HTMLElement> | ClassDescriptor
-) => {
+export const customElement = <T>(
+  tag: string,
+  config: CustomElementConfig<T> = {} as any
+) => (classOrDescriptor: Constructor<HTMLElement> | ClassDescriptor) => {
   if (!tag || (tag && tag.indexOf('-') <= 0)) {
-    throw new Error(`You need at least 1 dash in the custom element name! ${classOrDescriptor}`);
+    throw new Error(
+      `You need at least 1 dash in the custom element name! ${classOrDescriptor}`
+    );
   }
   const cls = classOrDescriptor as any;
 
@@ -86,15 +106,16 @@ export const customElement = <T>(tag: string, config: CustomElementConfig<T> = {
     cls.styles = config.style;
   }
   cls.prototype.render = config.template;
-  const render = cls.prototype.render || function () {};
+  const render = cls.prototype.render || function() {};
 
   cls.prototype.disconnectedCallback = function() {
     OnDestroy.call(this);
     disconnectedCallback.call(this);
+    unfreezeRouterWhenUnmounted();
   };
   cls.prototype.render = function() {
     return render.call(this);
-  }
+  };
   cls.prototype.update = function() {
     update.call(this);
     OnUpdate.call(this);
@@ -106,23 +127,26 @@ export const customElement = <T>(tag: string, config: CustomElementConfig<T> = {
   cls.prototype.connectedCallback = function() {
     // Check if element is pure HTMLElement or LitElement
     if (!this.performUpdate) {
-            config.template = config.template.bind(this);
-            const clone = document.importNode(config.template(this).getTemplateElement().content, true);
-            if (config.style) {
-              const style = document.createElement('style');
-              style.type = 'text/css';
-              if (style['styleSheet']){
-                  // This is required for IE8 and below.
-                  style['styleSheet'].cssText = config.style.toString();
-                } else {
-                  style.appendChild(document.createTextNode(config.style.toString()));
-              }
-              clone.append(style)
-            }
+      config.template = config.template.bind(this);
+      const clone = document.importNode(
+        config.template(this).getTemplateElement().content,
+        true
+      );
+      if (config.style) {
+        const style = document.createElement('style');
+        style.type = 'text/css';
+        if (style['styleSheet']) {
+          // This is required for IE8 and below.
+          style['styleSheet'].cssText = config.style.toString();
+        } else {
+          style.appendChild(document.createTextNode(config.style.toString()));
+        }
+        clone.append(style);
+      }
       if (config.useShadow) {
-          this.attachShadow({mode: 'open'}).append(clone);
+        this.attachShadow({ mode: 'open' }).append(clone);
       } else {
-          this.appendChild(clone);
+        this.appendChild(clone);
       }
     }
     connectedCallback.call(this);
@@ -130,15 +154,15 @@ export const customElement = <T>(tag: string, config: CustomElementConfig<T> = {
   };
   // window.customElements.define(config.selector, cls);
   if (typeof cls === 'function') {
-    legacyCustomElement(tag, cls, { extends: config.extends })
+    legacyCustomElement(tag, cls, { extends: config.extends });
   } else {
     standardCustomElement(tag, cls, { extends: config.extends });
   }
   RxdiComponent()(cls);
 };
 
-
-export const Component = <T>(config: CustomElementConfig<T>) => customElement(config.selector, config)
+export const Component = <T>(config: CustomElementConfig<T>) =>
+  customElement(config.selector, config);
 
 // @CustomElement2({
 //   selector: 'home-component',

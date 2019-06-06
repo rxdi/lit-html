@@ -22,6 +22,14 @@ const standardCustomElement = (tagName, descriptor, options) => {
 //   Object.setPrototypeOf(CustomElement.prototype, HTMLElement.prototype);
 //   Object.setPrototypeOf(CustomElement, HTMLElement);
 //   Object.setPrototypeOf(cls, CustomElement);
+const unfreezeRouterWhenUnmounted = () => {
+    let outlet;
+    try {
+        outlet = core_1.Container.get('router-outlet').getValue();
+        outlet.unfreezeRouter();
+    }
+    catch (e) { }
+};
 exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     if (!tag || (tag && tag.indexOf('-') <= 0)) {
         throw new Error(`You need at least 1 dash in the custom element name! ${classOrDescriptor}`);
@@ -46,6 +54,7 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     cls.prototype.disconnectedCallback = function () {
         OnDestroy.call(this);
         disconnectedCallback.call(this);
+        unfreezeRouterWhenUnmounted();
     };
     cls.prototype.render = function () {
         return render.call(this);
