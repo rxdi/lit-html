@@ -89,7 +89,7 @@ export const customElement = <T>(
     );
   }
   const cls = classOrDescriptor as any;
-
+  cls.is = () => tag;
   const OnInit = cls.prototype.OnInit || function() {};
   const OnDestroy = cls.prototype.OnDestroy || function() {};
   const OnUpdate = cls.prototype.OnUpdate || function() {};

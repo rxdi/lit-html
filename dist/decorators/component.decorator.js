@@ -35,6 +35,7 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
         throw new Error(`You need at least 1 dash in the custom element name! ${classOrDescriptor}`);
     }
     const cls = classOrDescriptor;
+    cls.is = () => tag;
     const OnInit = cls.prototype.OnInit || function () { };
     const OnDestroy = cls.prototype.OnDestroy || function () { };
     const OnUpdate = cls.prototype.OnUpdate || function () { };
