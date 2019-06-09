@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@rxdi/core");
+const lit_html_1 = require("../lit-html/lit-html");
 const legacyCustomElement = (tagName, clazz, options) => {
     window.customElements.define(tagName, clazz, options);
     return clazz;
@@ -70,6 +71,9 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     };
     cls.prototype.connectedCallback = function () {
         // Check if element is pure HTMLElement or LitElement
+        if (!config.template) {
+            config.template = () => lit_html_1.html ``;
+        }
         if (!this.performUpdate) {
             config.template = config.template.bind(this);
             const clone = document.importNode(config.template(this).getTemplateElement().content, true);

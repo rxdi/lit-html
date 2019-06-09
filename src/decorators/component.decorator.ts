@@ -1,6 +1,6 @@
 import { CSSResult } from '../lit-element/lib/css-tag';
 import { Component as RxdiComponent, Container } from '@rxdi/core';
-import { TemplateResult } from '../lit-html/lit-html';
+import { TemplateResult, html } from '../lit-html/lit-html';
 import { BehaviorSubject } from 'rxjs';
 import { Outlet } from '@rxdi/router';
 
@@ -126,6 +126,9 @@ export const customElement = <T>(
   };
   cls.prototype.connectedCallback = function() {
     // Check if element is pure HTMLElement or LitElement
+    if (!config.template) {
+      config.template = () => html``
+    }
     if (!this.performUpdate) {
       config.template = config.template.bind(this);
       const clone = document.importNode(
