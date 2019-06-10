@@ -36,7 +36,7 @@ export const subscribe = directive(
         'subscribableOrPromiseLike must be a subscribable or a promise like'
       );
     }
-
+ 
     // If we have already set up this subscribable in this part, we
     // don't need to do anything
     const previousValue = previousValues.get(part);
@@ -71,6 +71,5 @@ export const subscribe = directive(
     subscribableOrPromiseLike.subscribe(cb);
   }
 );
-
 
 export const async = subscribe;

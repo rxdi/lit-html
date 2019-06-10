@@ -1,7 +1,7 @@
 import { CSSResult } from '../lit-element/lib/css-tag';
 import { Component as RxdiComponent, Container } from '@rxdi/core';
 import { TemplateResult, html } from '../lit-html/lit-html';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, isObservable, Subscription } from 'rxjs';
 import { Outlet } from '@rxdi/router';
 
 interface CustomElementConfig<T> {
@@ -105,10 +105,13 @@ export const customElement = <T>(
   if (config.style) {
     cls.styles = config.style;
   }
+  cls.subscriptions = new Map();
   cls.prototype.render = config.template;
   const render = cls.prototype.render || function() {};
 
   cls.prototype.disconnectedCallback = function() {
+    // Disconnect from all observables when component is about to unmount
+    cls.subscriptions.forEach(sub => sub.unsubscribe());
     OnDestroy.call(this);
     disconnectedCallback.call(this);
     unfreezeRouterWhenUnmounted();
@@ -125,10 +128,22 @@ export const customElement = <T>(
     OnUpdateFirst.call(this);
   };
   cls.prototype.connectedCallback = function() {
-    // Check if element is pure HTMLElement or LitElement
+
+    // Override subscribe method so we can set subscription to new Map() later when component is unmounted we can unsubscribe
+    Object.keys(this).forEach(observable => {
+      if (isObservable(this[observable])) {
+        const original = this[observable].subscribe.bind(this[observable]);
+        this[observable].subscribe = function(cb, err) {
+          const subscribe = original(cb, err);
+          cls.subscriptions.set(subscribe, subscribe);
+          return subscribe;
+        };
+      }
+    });
     if (!config.template) {
-      config.template = () => html``
+      config.template = () => html``;
     }
+    // Check if element is pure HTMLElement or LitElement
     if (!this.performUpdate) {
       config.template = config.template.bind(this);
       const clone = document.importNode(

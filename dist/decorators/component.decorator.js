@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@rxdi/core");
 const lit_html_1 = require("../lit-html/lit-html");
+const rxjs_1 = require("rxjs");
 const legacyCustomElement = (tagName, clazz, options) => {
     window.customElements.define(tagName, clazz, options);
     return clazz;
@@ -51,9 +52,12 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     if (config.style) {
         cls.styles = config.style;
     }
+    cls.subscriptions = new Map();
     cls.prototype.render = config.template;
     const render = cls.prototype.render || function () { };
     cls.prototype.disconnectedCallback = function () {
+        // Disconnect from all observables when component is about to unmount
+        cls.subscriptions.forEach(sub => sub.unsubscribe());
         OnDestroy.call(this);
         disconnectedCallback.call(this);
         unfreezeRouterWhenUnmounted();
@@ -70,10 +74,21 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
         OnUpdateFirst.call(this);
     };
     cls.prototype.connectedCallback = function () {
-        // Check if element is pure HTMLElement or LitElement
+        // Override subscribe method so we can set subscription to new Map() later when component is unmounted we can unsubscribe
+        Object.keys(this).forEach(observable => {
+            if (rxjs_1.isObservable(this[observable])) {
+                const original = this[observable].subscribe.bind(this[observable]);
+                this[observable].subscribe = function (cb, err) {
+                    const subscribe = original(cb, err);
+                    cls.subscriptions.set(subscribe, subscribe);
+                    return subscribe;
+                };
+            }
+        });
         if (!config.template) {
             config.template = () => lit_html_1.html ``;
         }
+        // Check if element is pure HTMLElement or LitElement
         if (!this.performUpdate) {
             config.template = config.template.bind(this);
             const clone = document.importNode(config.template(this).getTemplateElement().content, true);
