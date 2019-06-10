@@ -55,6 +55,14 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     cls.subscriptions = new Map();
     cls.prototype.render = config.template;
     const render = cls.prototype.render || function () { };
+    cls.prototype.OnInit = function () {
+        if (config.container) {
+            lit_html_1.render(config.template(this), config.container);
+        }
+        else {
+            return OnInit();
+        }
+    };
     cls.prototype.disconnectedCallback = function () {
         // Disconnect from all observables when component is about to unmount
         cls.subscriptions.forEach(sub => sub.unsubscribe());

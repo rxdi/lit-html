@@ -1,15 +1,16 @@
 import { CSSResult } from '../lit-element/lib/css-tag';
 import { Component as RxdiComponent, Container } from '@rxdi/core';
-import { TemplateResult, html } from '../lit-html/lit-html';
-import { BehaviorSubject, isObservable, Subscription } from 'rxjs';
+import { TemplateResult, html, render as renderer } from '../lit-html/lit-html';
+import { BehaviorSubject, isObservable } from 'rxjs';
 import { Outlet } from '@rxdi/router';
 
 interface CustomElementConfig<T> {
-  selector?: string;
+  selector: string;
   template?: (self: T) => TemplateResult;
   style?: CSSResult | string;
   useShadow?: boolean;
   extends?: string;
+  container?: Element | DocumentFragment;
 }
 
 // From the TC39 Decorators proposal
@@ -109,6 +110,13 @@ export const customElement = <T>(
   cls.prototype.render = config.template;
   const render = cls.prototype.render || function() {};
 
+  cls.prototype.OnInit = function() {
+    if (config.container) {
+      renderer(config.template(this), config.container);
+    } else {
+      return OnInit();
+    }
+  }
   cls.prototype.disconnectedCallback = function() {
     // Disconnect from all observables when component is about to unmount
     cls.subscriptions.forEach(sub => sub.unsubscribe());

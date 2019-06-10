@@ -1,11 +1,12 @@
 import { CSSResult } from '../lit-element/lib/css-tag';
 import { TemplateResult } from '../lit-html/lit-html';
 interface CustomElementConfig<T> {
-    selector?: string;
+    selector: string;
     template?: (self: T) => TemplateResult;
     style?: CSSResult | string;
     useShadow?: boolean;
     extends?: string;
+    container?: Element | DocumentFragment;
 }
 interface ClassDescriptor {
     kind: 'class';
