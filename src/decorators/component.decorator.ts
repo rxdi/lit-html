@@ -141,9 +141,9 @@ export const customElement = <T>(
     Object.keys(this).forEach(observable => {
       if (isObservable(this[observable])) {
         const original = this[observable].subscribe.bind(this[observable]);
-        this[observable].subscribe = function(cb, err) {
+        this[observable].subscribe = (cb, err) => {
           const subscribe = original(cb, err);
-          cls.subscriptions.set(subscribe, subscribe);
+          cls.subscriptions.set(this[observable], subscribe);
           return subscribe;
         };
       }

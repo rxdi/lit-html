@@ -86,9 +86,9 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
         Object.keys(this).forEach(observable => {
             if (rxjs_1.isObservable(this[observable])) {
                 const original = this[observable].subscribe.bind(this[observable]);
-                this[observable].subscribe = function (cb, err) {
+                this[observable].subscribe = (cb, err) => {
                     const subscribe = original(cb, err);
-                    cls.subscriptions.set(subscribe, subscribe);
+                    cls.subscriptions.set(this[observable], subscribe);
                     return subscribe;
                 };
             }
