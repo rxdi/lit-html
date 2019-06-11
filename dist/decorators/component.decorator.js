@@ -58,6 +58,18 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     cls.prototype.OnInit = function () {
         if (config.container) {
             lit_html_1.render(config.template(this), config.container);
+            if (config.style) {
+                const style = document.createElement('style');
+                style.type = 'text/css';
+                if (style['styleSheet']) {
+                    // This is required for IE8 and below.
+                    style['styleSheet'].cssText = config.style.toString();
+                }
+                else {
+                    style.appendChild(document.createTextNode(config.style.toString()));
+                }
+                config.container.prepend(style);
+            }
         }
         else {
             return OnInit();
