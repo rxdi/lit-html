@@ -3,7 +3,8 @@ import { TemplateResult } from '../lit-html/lit-html';
 interface CustomElementConfig<T> {
     selector: string;
     template?: (self: T) => TemplateResult;
-    style?: CSSResult | string;
+    style?: CSSResult;
+    styles?: CSSResult[];
     useShadow?: boolean;
     extends?: string;
     container?: Element | DocumentFragment;

@@ -38,6 +38,7 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     }
     const cls = classOrDescriptor;
     cls.is = () => tag;
+    config.styles = config.styles || [];
     const OnInit = cls.prototype.OnInit || function () { };
     const OnDestroy = cls.prototype.OnDestroy || function () { };
     const OnUpdate = cls.prototype.OnUpdate || function () { };
@@ -50,8 +51,9 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
         config.template = cls.prototype.render;
     }
     if (config.style) {
-        cls.styles = config.style;
+        config.styles.push(config.style);
     }
+    cls.styles = config.styles;
     cls.subscriptions = new Map();
     cls.prototype.render = config.template;
     const render = cls.prototype.render || function () { };

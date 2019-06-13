@@ -20,7 +20,6 @@ export * from './lib/css-tag';
 declare global {
     interface Window {
         litElementVersions: string[];
-        ShadowRoot: any;
     }
 }
 export interface FlattenArray extends Array<CSSResult | CSSResultArray> {

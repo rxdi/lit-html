@@ -23,7 +23,4 @@
             "node_modules/@types"
         ],
     },
-    "files": [
-        "./src/index.ts"
-    ]
 }

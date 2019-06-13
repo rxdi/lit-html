@@ -7,7 +7,8 @@ import { Outlet } from '@rxdi/router';
 interface CustomElementConfig<T> {
   selector: string;
   template?: (self: T) => TemplateResult;
-  style?: CSSResult | string;
+  style?: CSSResult;
+  styles?: CSSResult[];
   useShadow?: boolean;
   extends?: string;
   container?: Element | DocumentFragment;
@@ -91,6 +92,7 @@ export const customElement = <T>(
   }
   const cls = classOrDescriptor as any;
   cls.is = () => tag;
+  config.styles = config.styles || [];
   const OnInit = cls.prototype.OnInit || function() {};
   const OnDestroy = cls.prototype.OnDestroy || function() {};
   const OnUpdate = cls.prototype.OnUpdate || function() {};
@@ -104,8 +106,9 @@ export const customElement = <T>(
     config.template = cls.prototype.render;
   }
   if (config.style) {
-    cls.styles = config.style;
+    config.styles.push(config.style);
   }
+  cls.styles = config.styles;
   cls.subscriptions = new Map();
   cls.prototype.render = config.template;
   const render = cls.prototype.render || function() {};
