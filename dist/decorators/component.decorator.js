@@ -143,7 +143,7 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     else {
         standardCustomElement(tag, cls, { extends: config.extends });
     }
-    core_1.Component()(cls);
+    core_1.Component(config)(cls);
 };
 exports.Component = (config) => exports.customElement(config.selector, config);
 // @CustomElement2({

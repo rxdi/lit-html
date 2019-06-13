@@ -198,7 +198,7 @@ export const customElement = <T>(
   } else {
     standardCustomElement(tag, cls, { extends: config.extends });
   }
-  RxdiComponent()(cls);
+  RxdiComponent(config as any)(cls);
 };
 
 export const Component = <T>(config: CustomElementConfig<T>) =>
