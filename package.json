@@ -9,8 +9,8 @@
     "url": "https://github.com/rxdi/lit-html"
   },
   "devDependencies": {
-    "@rxdi/core": "^0.5.12",
-    "@rxdi/router": "^0.5.12",
+    "@rxdi/core": "^0.5.14",
+    "@rxdi/router": "^0.5.14",
     "typescript": "^3.5.1"
   },
   "types": "./dist/index.d.ts",
