@@ -102,7 +102,7 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
                 const original = this[observable].subscribe.bind(this[observable]);
                 this[observable].subscribe = (cb, err) => {
                     const subscribe = original(cb, err);
-                    cls.subscriptions.set(this[observable], subscribe);
+                    cls.subscriptions.set(subscribe, subscribe);
                     return subscribe;
                 };
             }

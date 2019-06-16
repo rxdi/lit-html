@@ -91,6 +91,7 @@ export const customElement = <T>(
     );
   }
   const cls = classOrDescriptor as any;
+
   cls.is = () => tag;
   config.styles = config.styles || [];
   const OnInit = cls.prototype.OnInit || function() {};
@@ -157,7 +158,7 @@ export const customElement = <T>(
         const original = this[observable].subscribe.bind(this[observable]);
         this[observable].subscribe = (cb, err) => {
           const subscribe = original(cb, err);
-          cls.subscriptions.set(this[observable], subscribe);
+          cls.subscriptions.set(subscribe, subscribe);
           return subscribe;
         };
       }
@@ -199,6 +200,7 @@ export const customElement = <T>(
     standardCustomElement(tag, cls, { extends: config.extends });
   }
   RxdiComponent(config as any)(cls);
+ 
 };
 
 export const Component = <T>(config: CustomElementConfig<T>) =>
