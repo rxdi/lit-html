@@ -116,7 +116,7 @@ export const customElement = <T>(
 
   cls.prototype.OnInit = function() {
     if (config.container) {
-      renderer(config.template(this), config.container);
+      renderer(config.template.call(this), config.container);
       if (config.style) {
         const style = document.createElement('style');
         style.type = 'text/css';
@@ -131,7 +131,7 @@ export const customElement = <T>(
     } else {
       return OnInit();
     }
-  }
+  };
   cls.prototype.disconnectedCallback = function() {
     // Disconnect from all observables when component is about to unmount
     cls.subscriptions.forEach(sub => sub.unsubscribe());
@@ -151,7 +151,6 @@ export const customElement = <T>(
     OnUpdateFirst.call(this);
   };
   cls.prototype.connectedCallback = function() {
-
     // Override subscribe method so we can set subscription to new Map() later when component is unmounted we can unsubscribe
     Object.keys(this).forEach(observable => {
       if (isObservable(this[observable])) {
@@ -200,7 +199,6 @@ export const customElement = <T>(
     standardCustomElement(tag, cls, { extends: config.extends });
   }
   RxdiComponent(config as any)(cls);
- 
 };
 
 export const Component = <T>(config: CustomElementConfig<T>) =>
