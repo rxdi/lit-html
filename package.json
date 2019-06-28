@@ -12,7 +12,7 @@
     "@rxdi/core": "^0.6.6",
     "@rxdi/router": "^0.6.6",
     "rxjs": "^6.5.2",
-    "typescript": "^3.5.1"
+    "typescript": "^3.5.2"
   },
   "types": "./dist/index.d.ts",
   "module": "./dist/index.js",

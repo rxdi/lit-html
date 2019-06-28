@@ -116,6 +116,14 @@ class AttributePart {
 }
 exports.AttributePart = AttributePart;
 /**
+ * Creates a new NodePart instance
+ * Introduced because of scope hoisting problem with parcel js
+ * https://github.com/parcel-bundler/parcel/issues/3172
+ */
+function nodePartFactory(options) {
+    return new NodePart(options);
+}
+/**
  * A Part that controls a location within a Node tree. Like a Range, NodePart
  * has start and end locations and can set and update the Nodes between those
  * locations.
@@ -272,13 +280,15 @@ class NodePart {
             itemPart = itemParts[partIndex];
             // If no existing part, create a new one
             if (itemPart === undefined) {
-                itemPart = new NodePart(this.options);
-                itemParts.push(itemPart);
-                if (partIndex === 0) {
-                    itemPart.appendIntoPart(this);
-                }
-                else {
-                    itemPart.insertAfterPart(itemParts[partIndex - 1]);
+                if (itemPart === undefined) {
+                    itemPart = nodePartFactory(this.options);
+                    itemParts.push(itemPart);
+                    if (partIndex === 0) {
+                        itemPart.appendIntoPart(this);
+                    }
+                    else {
+                        itemPart.insertAfterPart(itemParts[partIndex - 1]);
+                    }
                 }
             }
             itemPart.setValue(item);
