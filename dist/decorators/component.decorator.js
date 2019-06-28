@@ -59,7 +59,7 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     const render = cls.prototype.render || function () { };
     cls.prototype.OnInit = function () {
         if (config.container) {
-            lit_html_1.render(config.template(this), config.container);
+            lit_html_1.render(config.template.call(this), config.container);
             if (config.style) {
                 const style = document.createElement('style');
                 style.type = 'text/css';

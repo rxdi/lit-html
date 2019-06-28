@@ -10,7 +10,8 @@
   },
   "devDependencies": {
     "@rxdi/core": "^0.6.4",
-    "@rxdi/router": "^0.6.4",
+    "@rxdi/router": "^0.6.5",
+    "rxjs": "^6.5.2",
     "typescript": "^3.5.1"
   },
   "types": "./dist/index.d.ts",
