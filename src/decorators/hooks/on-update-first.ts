@@ -1,3 +1,3 @@
-export interface OnFirstUpdated {
-    OnFirstUpdated(): void;
+export interface OnUpdateFirst {
+    OnUpdateFirst(): void;
 }
