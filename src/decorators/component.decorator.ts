@@ -128,9 +128,8 @@ export const customElement = <T>(
         }
         config.container.prepend(style);
       }
-    } else {
-      return OnInit();
     }
+    return OnInit.call(this);
   };
   cls.prototype.disconnectedCallback = function() {
     // Disconnect from all observables when component is about to unmount
