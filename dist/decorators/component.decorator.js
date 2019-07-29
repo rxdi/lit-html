@@ -38,6 +38,10 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     }
     const cls = classOrDescriptor;
     cls.is = () => tag;
+    cls.setContainer = (document) => {
+        config.container = document;
+        return cls;
+    };
     config.styles = config.styles || [];
     const OnInit = cls.prototype.OnInit || function () { };
     const OnDestroy = cls.prototype.OnDestroy || function () { };

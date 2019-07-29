@@ -35,7 +35,7 @@ type Constructor<T> = new (...args: unknown[]) => T;
 
 const legacyCustomElement = (
   tagName: string,
-  clazz: Constructor<HTMLElement>,
+  clazz: Constructor<RXDI>,
   options: { extends: HTMLElementTagNameMap | string }
 ) => {
   window.customElements.define(
@@ -56,7 +56,7 @@ const standardCustomElement = (
     kind,
     elements,
     // This callback is called once the class is otherwise fully defined
-    finisher(clazz: Constructor<HTMLElement>) {
+    finisher(clazz: Constructor<RXDI>) {
       window.customElements.define(
         tagName,
         clazz,
@@ -81,10 +81,14 @@ const unfreezeRouterWhenUnmounted = () => {
   } catch (e) {}
 };
 
+export interface RXDI extends HTMLElement {
+  setContainer?(document: RXDI): RXDI;
+}
+
 export const customElement = <T>(
   tag: string,
   config: CustomElementConfig<T> = {} as any
-) => (classOrDescriptor: Constructor<HTMLElement> | ClassDescriptor) => {
+) => (classOrDescriptor: Constructor<RXDI> | ClassDescriptor) => {
   if (!tag || (tag && tag.indexOf('-') <= 0)) {
     throw new Error(
       `You need at least 1 dash in the custom element name! ${classOrDescriptor}`
@@ -93,6 +97,10 @@ export const customElement = <T>(
   const cls = classOrDescriptor as any;
 
   cls.is = () => tag;
+  cls.setContainer = (document: RXDI) => {
+    config.container = document;
+    return cls;
+  };
   config.styles = config.styles || [];
   const OnInit = cls.prototype.OnInit || function() {};
   const OnDestroy = cls.prototype.OnDestroy || function() {};
