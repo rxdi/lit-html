@@ -162,7 +162,7 @@ export class LitElement extends UpdatingElement {
    * @returns {Element|DocumentFragment} Returns a node into which to render.
    */
   protected createRenderRoot(): Element|ShadowRoot {
-    if (this.shadowRoot) {
+    if (this.attachShadow) {
       return this.attachShadow({mode: 'open'});
     }
     return this;
