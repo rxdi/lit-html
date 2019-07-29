@@ -1,3 +1,5 @@
+import { RXDIElement } from '../../decorators/index';
+
 /**
  * @license
  * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -196,7 +198,7 @@ type UpdateState = typeof STATE_HAS_UPDATED|typeof STATE_UPDATE_REQUESTED|
  * properties change, the `update` method is asynchronously called. This method
  * should be supplied by subclassers to render updates as desired.
  */
-export abstract class UpdatingElement extends HTMLElement {
+export abstract class UpdatingElement extends RXDIElement {
   /*
    * Due to closure compiler ES6 compilation bugs, @nocollapse is required on
    * all static methods and properties with initializers.  Reference:

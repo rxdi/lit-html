@@ -1,5 +1,6 @@
 import { CSSResult } from '../lit-element/lib/css-tag';
 import { TemplateResult } from '../lit-html/lit-html';
+import { RXDIElement } from './tokens';
 interface CustomElementConfig<T> {
     selector: string;
     template?: (self: T) => TemplateResult;
@@ -24,9 +25,6 @@ interface ClassElement {
     descriptor?: PropertyDescriptor;
 }
 declare type Constructor<T> = new (...args: unknown[]) => T;
-export interface RXDI extends HTMLElement {
-    setContainer?(document: RXDI): RXDI;
-}
-export declare const customElement: <T>(tag: string, config?: CustomElementConfig<T>) => (classOrDescriptor: ClassDescriptor | Constructor<RXDI>) => void;
-export declare const Component: <T>(config: CustomElementConfig<T>) => (classOrDescriptor: ClassDescriptor | Constructor<RXDI>) => void;
+export declare const customElement: <T>(tag: string, config?: CustomElementConfig<T>) => (classOrDescriptor: ClassDescriptor | Constructor<RXDIElement>) => void;
+export declare const Component: <T>(config: CustomElementConfig<T>) => (classOrDescriptor: ClassDescriptor | Constructor<RXDIElement>) => void;
 export {};

@@ -1,8 +1,10 @@
 import { CSSResult } from '../lit-element/lib/css-tag';
-import { Component as RxdiComponent, Container } from '@rxdi/core';
+import { Component as RXDIElementComponent, Container } from '@rxdi/core';
 import { TemplateResult, html, render as renderer } from '../lit-html/lit-html';
-import { BehaviorSubject, isObservable } from 'rxjs';
+import { BehaviorSubject, isObservable, Subscription } from 'rxjs';
 import { Outlet } from '@rxdi/router';
+import { CSSResultArray } from '../lit-element/lit-element';
+import { RXDIElement } from './tokens';
 
 interface CustomElementConfig<T> {
   selector: string;
@@ -35,7 +37,7 @@ type Constructor<T> = new (...args: unknown[]) => T;
 
 const legacyCustomElement = (
   tagName: string,
-  clazz: Constructor<RXDI>,
+  clazz: Constructor<RXDIElement>,
   options: { extends: HTMLElementTagNameMap | string }
 ) => {
   window.customElements.define(
@@ -56,7 +58,7 @@ const standardCustomElement = (
     kind,
     elements,
     // This callback is called once the class is otherwise fully defined
-    finisher(clazz: Constructor<RXDI>) {
+    finisher(clazz: Constructor<RXDIElement>) {
       window.customElements.define(
         tagName,
         clazz,
@@ -81,14 +83,11 @@ const unfreezeRouterWhenUnmounted = () => {
   } catch (e) {}
 };
 
-export interface RXDI extends HTMLElement {
-  setContainer?(document: RXDI): RXDI;
-}
 
 export const customElement = <T>(
   tag: string,
   config: CustomElementConfig<T> = {} as any
-) => (classOrDescriptor: Constructor<RXDI> | ClassDescriptor) => {
+) => (classOrDescriptor: Constructor<RXDIElement> | ClassDescriptor) => {
   if (!tag || (tag && tag.indexOf('-') <= 0)) {
     throw new Error(
       `You need at least 1 dash in the custom element name! ${classOrDescriptor}`
@@ -97,11 +96,14 @@ export const customElement = <T>(
   const cls = classOrDescriptor as any;
 
   cls.is = () => tag;
-  cls.setContainer = (document: RXDI) => {
+  cls.setElement = (document: RXDIElement) => {
     config.container = document;
     return cls;
   };
   config.styles = config.styles || [];
+  cls.prototype.getTemplateResult = function () {
+    return this;
+  }
   const OnInit = cls.prototype.OnInit || function() {};
   const OnDestroy = cls.prototype.OnDestroy || function() {};
   const OnUpdate = cls.prototype.OnUpdate || function() {};
@@ -205,7 +207,7 @@ export const customElement = <T>(
   } else {
     standardCustomElement(tag, cls, { extends: config.extends });
   }
-  RxdiComponent(config as any)(cls);
+  RXDIElementComponent(config as any)(cls);
 };
 
 export const Component = <T>(config: CustomElementConfig<T>) =>

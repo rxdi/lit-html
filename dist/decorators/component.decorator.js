@@ -38,11 +38,14 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     }
     const cls = classOrDescriptor;
     cls.is = () => tag;
-    cls.setContainer = (document) => {
+    cls.setElement = (document) => {
         config.container = document;
         return cls;
     };
     config.styles = config.styles || [];
+    cls.prototype.getTemplateResult = function () {
+        return this;
+    };
     const OnInit = cls.prototype.OnInit || function () { };
     const OnDestroy = cls.prototype.OnDestroy || function () { };
     const OnUpdate = cls.prototype.OnUpdate || function () { };

@@ -5,3 +5,5 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./template-observable"));
 __export(require("./component.decorator"));
+__export(require("./tokens"));
+__export(require("./test.helpers"));

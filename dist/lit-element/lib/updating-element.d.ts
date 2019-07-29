@@ -1,16 +1,4 @@
-/**
- * @license
- * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at
- * http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at
- * http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at
- * http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at
- * http://polymer.github.io/PATENTS.txt
- */
+import { RXDIElement } from '../../decorators/index';
 declare global {
     var JSCompiler_renameProperty: <P extends PropertyKey>(prop: P, _obj: unknown) => P;
     interface Window {
@@ -114,7 +102,7 @@ export declare const notEqual: HasChanged;
  * properties change, the `update` method is asynchronously called. This method
  * should be supplied by subclassers to render updates as desired.
  */
-export declare abstract class UpdatingElement extends HTMLElement {
+export declare abstract class UpdatingElement extends RXDIElement {
     /**
      * Maps attribute names to properties; for example `foobar` attribute to
      * `fooBar` property. Created lazily on user subclasses when finalizing the
