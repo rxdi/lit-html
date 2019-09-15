@@ -10,8 +10,8 @@ export class RXDIElement extends HTMLElement {
   public static subscriptions?: Map<Subscription, Subscription>;
   public getTemplateResult?(): TemplateResult;
 
-  OnBefore?() {}
-  OnInit?() {}
-  OnUpdate?() {}
-  OnUpdateFirst?() {}
+  OnBefore?: () => void;
+  OnInit?: () => void;
+  OnUpdate?: () => void;
+  OnUpdateFirst?: () => void;
 }
