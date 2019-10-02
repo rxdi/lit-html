@@ -9,6 +9,7 @@ interface CustomElementConfig<T> {
     useShadow?: boolean;
     extends?: string;
     container?: Element | DocumentFragment;
+    providers?: Function[];
 }
 interface ClassDescriptor {
     kind: 'class';

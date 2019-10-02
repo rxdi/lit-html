@@ -14,6 +14,7 @@ interface CustomElementConfig<T> {
   useShadow?: boolean;
   extends?: string;
   container?: Element | DocumentFragment;
+  providers?: Function[];
 }
 
 // From the TC39 Decorators proposal
@@ -142,6 +143,12 @@ export const customElement = <T>(
     return OnInit.call(this);
   };
   cls.prototype.disconnectedCallback = function() {
+    if (config.providers && config.providers.length) {
+      config.providers.forEach(provider => {
+        Container.reset(provider)
+        Container.remove(provider)
+      })
+    }
     // Disconnect from all observables when component is about to unmount
     cls.subscriptions.forEach(sub => sub.unsubscribe());
     OnDestroy.call(this);
@@ -160,6 +167,9 @@ export const customElement = <T>(
     OnUpdateFirst.call(this);
   };
   cls.prototype.connectedCallback = function() {
+    if (config.providers && config.providers.length) {
+      config.providers.forEach(provider => Container.get(provider))
+    }
     // Override subscribe method so we can set subscription to new Map() later when component is unmounted we can unsubscribe
     Object.keys(this).forEach(observable => {
       if (isObservable(this[observable])) {
