@@ -11,8 +11,8 @@
   "devDependencies": {
     "@rxdi/core": "^0.7.37",
     "@rxdi/router": "^0.7.37",
-    "rxjs": "^6.5.2",
-    "typescript": "^3.5.2"
+    "rxjs": "^6.5.3",
+    "typescript": "^3.5.3"
   },
   "types": "./dist/index.d.ts",
   "module": "./dist/index.js",
