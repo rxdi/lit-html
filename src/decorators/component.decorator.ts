@@ -84,7 +84,6 @@ const unfreezeRouterWhenUnmounted = () => {
   } catch (e) {}
 };
 
-
 export const customElement = <T>(
   tag: string,
   config: CustomElementConfig<T> = {} as any
@@ -102,9 +101,9 @@ export const customElement = <T>(
     return cls;
   };
   config.styles = config.styles || [];
-  cls.prototype.getTemplateResult = function () {
+  cls.prototype.getTemplateResult = function() {
     return this;
-  }
+  };
   const OnInit = cls.prototype.OnInit || function() {};
   const OnDestroy = cls.prototype.OnDestroy || function() {};
   const OnUpdate = cls.prototype.OnUpdate || function() {};
@@ -142,34 +141,7 @@ export const customElement = <T>(
     }
     return OnInit.call(this);
   };
-  cls.prototype.disconnectedCallback = function() {
-    if (config.providers && config.providers.length) {
-      config.providers.forEach(provider => {
-        Container.reset(provider)
-        Container.remove(provider)
-      })
-    }
-    // Disconnect from all observables when component is about to unmount
-    cls.subscriptions.forEach(sub => sub.unsubscribe());
-    OnDestroy.call(this);
-    disconnectedCallback.call(this);
-    unfreezeRouterWhenUnmounted();
-  };
-  cls.prototype.render = function() {
-    return render.call(this);
-  };
-  cls.prototype.update = function() {
-    update.call(this);
-    OnUpdate.call(this);
-  };
-  cls.prototype.firstUpdated = function() {
-    firstUpdated.call(this);
-    OnUpdateFirst.call(this);
-  };
-  cls.prototype.connectedCallback = function() {
-    if (config.providers && config.providers.length) {
-      config.providers.forEach(provider => Container.get(provider))
-    }
+  function mapToSubscriptions() {
     // Override subscribe method so we can set subscription to new Map() later when component is unmounted we can unsubscribe
     Object.keys(this).forEach(observable => {
       if (isObservable(this[observable])) {
@@ -181,6 +153,39 @@ export const customElement = <T>(
         };
       }
     });
+  }
+  cls.prototype.disconnectedCallback = function() {
+    if (config.providers && config.providers.length) {
+      config.providers.forEach(provider => {
+        Container.reset(provider);
+        Container.remove(provider);
+      });
+    }
+    // Disconnect from all observables when component is about to unmount
+    cls.subscriptions.forEach(sub => sub.unsubscribe());
+    cls.subscriptions.clear();
+    OnDestroy.call(this);
+    disconnectedCallback.call(this);
+    unfreezeRouterWhenUnmounted();
+  };
+  cls.prototype.render = function() {
+    return render.call(this);
+  };
+  cls.prototype.update = function() {
+    update.call(this);
+    OnUpdate.call(this);
+    mapToSubscriptions.call(this);
+  };
+  cls.prototype.firstUpdated = function() {
+    firstUpdated.call(this);
+    OnUpdateFirst.call(this);
+    mapToSubscriptions.call(this);
+  };
+  cls.prototype.connectedCallback = function() {
+    if (config.providers && config.providers.length) {
+      config.providers.forEach(provider => Container.get(provider));
+    }
+    mapToSubscriptions.call(this);
     if (!config.template) {
       config.template = () => html``;
     }

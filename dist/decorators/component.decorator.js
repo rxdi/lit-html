@@ -82,36 +82,7 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
         }
         return OnInit.call(this);
     };
-    cls.prototype.disconnectedCallback = function () {
-        if (config.providers && config.providers.length) {
-            config.providers.forEach(provider => {
-                console.log(provider, 'Will be removed')
-                core_1.Container.reset(provider);
-                core_1.Container.remove(provider);
-            });
-        }
-        // Disconnect from all observables when component is about to unmount
-        cls.subscriptions.forEach(sub => sub.unsubscribe());
-        OnDestroy.call(this);
-        disconnectedCallback.call(this);
-        unfreezeRouterWhenUnmounted();
-    };
-    cls.prototype.render = function () {
-        return render.call(this);
-    };
-    cls.prototype.update = function () {
-        update.call(this);
-        OnUpdate.call(this);
-    };
-    cls.prototype.firstUpdated = function () {
-        firstUpdated.call(this);
-        OnUpdateFirst.call(this);
-    };
-    cls.prototype.connectedCallback = function () {
-        if (config.providers && config.providers.length) {
-            console.log(config.providers)
-            config.providers.forEach(provider => core_1.Container.get(provider));
-        }
+    function mapToSubscriptions() {
         // Override subscribe method so we can set subscription to new Map() later when component is unmounted we can unsubscribe
         Object.keys(this).forEach(observable => {
             if (rxjs_1.isObservable(this[observable])) {
@@ -123,6 +94,39 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
                 };
             }
         });
+    }
+    cls.prototype.disconnectedCallback = function () {
+        if (config.providers && config.providers.length) {
+            config.providers.forEach(provider => {
+                core_1.Container.reset(provider);
+                core_1.Container.remove(provider);
+            });
+        }
+        // Disconnect from all observables when component is about to unmount
+        cls.subscriptions.forEach(sub => sub.unsubscribe());
+        cls.subscriptions.clear();
+        OnDestroy.call(this);
+        disconnectedCallback.call(this);
+        unfreezeRouterWhenUnmounted();
+    };
+    cls.prototype.render = function () {
+        return render.call(this);
+    };
+    cls.prototype.update = function () {
+        update.call(this);
+        OnUpdate.call(this);
+        mapToSubscriptions.call(this);
+    };
+    cls.prototype.firstUpdated = function () {
+        firstUpdated.call(this);
+        OnUpdateFirst.call(this);
+        mapToSubscriptions.call(this);
+    };
+    cls.prototype.connectedCallback = function () {
+        if (config.providers && config.providers.length) {
+            config.providers.forEach(provider => core_1.Container.get(provider));
+        }
+        mapToSubscriptions.call(this);
         if (!config.template) {
             config.template = () => lit_html_1.html ``;
         }
