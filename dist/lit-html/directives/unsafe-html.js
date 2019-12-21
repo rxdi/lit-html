@@ -13,8 +13,8 @@
  * http://polymer.github.io/PATENTS.txt
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const parts_js_1 = require("../lib/parts.js");
-const lit_html_js_1 = require("../lit-html.js");
+const parts_1 = require("../lib/parts");
+const lit_html_1 = require("../lit-html");
 // For each part, remember the value that was last rendered to the part by the
 // unsafeHTML directive, and the DocumentFragment that was last set as a value.
 // The DocumentFragment is used as a unique key to check if the last value
@@ -28,12 +28,12 @@ const previousValues = new WeakMap();
  * sanitized or escaped, as it may lead to cross-site-scripting
  * vulnerabilities.
  */
-exports.unsafeHTML = lit_html_js_1.directive((value) => (part) => {
-    if (!(part instanceof lit_html_js_1.NodePart)) {
+exports.unsafeHTML = lit_html_1.directive((value) => (part) => {
+    if (!(part instanceof lit_html_1.NodePart)) {
         throw new Error('unsafeHTML can only be used in text bindings');
     }
     const previousValue = previousValues.get(part);
-    if (previousValue !== undefined && parts_js_1.isPrimitive(value) &&
+    if (previousValue !== undefined && parts_1.isPrimitive(value) &&
         value === previousValue.value && part.value === previousValue.fragment) {
         return;
     }

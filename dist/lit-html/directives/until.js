@@ -13,8 +13,8 @@
  * http://polymer.github.io/PATENTS.txt
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const parts_js_1 = require("../lib/parts.js");
-const lit_html_js_1 = require("../lit-html.js");
+const parts_1 = require("../lib/parts");
+const lit_html_1 = require("../lit-html");
 const _state = new WeakMap();
 // Effectively infinity, but a SMI.
 const _infinity = 0x7fffffff;
@@ -37,7 +37,7 @@ const _infinity = 0x7fffffff;
  *     const content = fetch('./content.txt').then(r => r.text());
  *     html`${until(content, html`<span>Loading...</span>`)}`
  */
-exports.until = lit_html_js_1.directive((...args) => (part) => {
+exports.until = lit_html_1.directive((...args) => (part) => {
     let state = _state.get(part);
     if (state === undefined) {
         state = {
@@ -56,7 +56,7 @@ exports.until = lit_html_js_1.directive((...args) => (part) => {
         }
         const value = args[i];
         // Render non-Promise values immediately
-        if (parts_js_1.isPrimitive(value) ||
+        if (parts_1.isPrimitive(value) ||
             typeof value.then !== 'function') {
             part.setValue(value);
             state.lastRenderedIndex = i;

@@ -11,7 +11,7 @@
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-import { Part } from '../lit-html.js';
+import { Part } from '../lit-html';
 /**
  * For AttributeParts, sets the attribute if the value is defined and removes
  * the attribute if the value is undefined.

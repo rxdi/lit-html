@@ -14,7 +14,7 @@
 /**
  * @module lit-html
  */
-import { Part } from './part.js';
+import { Part } from './part';
 export declare type DirectiveFactory = (...args: any[]) => object;
 export declare type DirectiveFn = (part: Part) => void;
 /**

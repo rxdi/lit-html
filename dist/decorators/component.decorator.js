@@ -1,8 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const core_1 = require("@rxdi/core");
 const lit_html_1 = require("../lit-html/lit-html");
-const rxjs_1 = require("rxjs");
 const legacyCustomElement = (tagName, clazz, options) => {
     window.customElements.define(tagName, clazz, options);
     return clazz;
@@ -24,14 +22,6 @@ const standardCustomElement = (tagName, descriptor, options) => {
 //   Object.setPrototypeOf(CustomElement.prototype, HTMLElement.prototype);
 //   Object.setPrototypeOf(CustomElement, HTMLElement);
 //   Object.setPrototypeOf(cls, CustomElement);
-const unfreezeRouterWhenUnmounted = () => {
-    let outlet;
-    try {
-        outlet = core_1.Container.get('router-outlet').getValue();
-        outlet.unfreezeRouter();
-    }
-    catch (e) { }
-};
 exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     if (!tag || (tag && tag.indexOf('-') <= 0)) {
         throw new Error(`You need at least 1 dash in the custom element name! ${classOrDescriptor}`);
@@ -85,7 +75,7 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     function mapToSubscriptions() {
         // Override subscribe method so we can set subscription to new Map() later when component is unmounted we can unsubscribe
         Object.keys(this).forEach(observable => {
-            if (rxjs_1.isObservable(this[observable])) {
+            if (this[observable] && typeof this[observable].lift === 'function' && typeof this[observable].subscribe === 'function') {
                 const original = this[observable].subscribe.bind(this[observable]);
                 this[observable].subscribe = (cb, err) => {
                     const subscribe = original(cb, err);
@@ -98,8 +88,13 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     cls.prototype.disconnectedCallback = function () {
         if (config.providers && config.providers.length) {
             config.providers.forEach(provider => {
-                core_1.Container.reset(provider);
-                core_1.Container.remove(provider);
+                try {
+                    const rxdi = '@rxdi/core';
+                    const { Container } = require(rxdi);
+                    Container.reset(provider);
+                    Container.remove(provider);
+                }
+                catch (e) { }
             });
         }
         // Disconnect from all observables when component is about to unmount
@@ -107,7 +102,6 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
         cls.subscriptions.clear();
         OnDestroy.call(this);
         disconnectedCallback.call(this);
-        unfreezeRouterWhenUnmounted();
     };
     cls.prototype.render = function () {
         return render.call(this);
@@ -124,7 +118,12 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     };
     cls.prototype.connectedCallback = function () {
         if (config.providers && config.providers.length) {
-            config.providers.forEach(provider => core_1.Container.get(provider));
+            try {
+                const rxdi = '@rxdi/core';
+                const { Container } = require(rxdi);
+                config.providers.forEach(provider => Container.get(provider));
+            }
+            catch (e) { }
         }
         mapToSubscriptions.call(this);
         if (!config.template) {
@@ -163,7 +162,11 @@ exports.customElement = (tag, config = {}) => (classOrDescriptor) => {
     else {
         standardCustomElement(tag, cls, { extends: config.extends });
     }
-    core_1.Component(config)(cls);
+    try {
+        const rxdi = '@rxdi/core';
+        require(rxdi).Component(config)(cls);
+    }
+    catch (e) { }
 };
 exports.Component = (config) => exports.customElement(config.selector, config);
 // @CustomElement2({

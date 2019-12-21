@@ -13,8 +13,8 @@
  * http://polymer.github.io/PATENTS.txt
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const template_instance_js_1 = require("../lib/template-instance.js");
-const lit_html_js_1 = require("../lit-html.js");
+const template_instance_1 = require("../lib/template-instance");
+const lit_html_1 = require("../lit-html");
 const templateCaches = new WeakMap();
 /**
  * Enables fast switching between multiple templates by caching the DOM nodes
@@ -30,8 +30,8 @@ const templateCaches = new WeakMap();
  * `
  * ```
  */
-exports.cache = lit_html_js_1.directive((value) => (part) => {
-    if (!(part instanceof lit_html_js_1.NodePart)) {
+exports.cache = lit_html_1.directive((value) => (part) => {
+    if (!(part instanceof lit_html_1.NodePart)) {
         throw new Error('cache can only be used in text bindings');
     }
     let templateCache = templateCaches.get(part);
@@ -42,8 +42,8 @@ exports.cache = lit_html_js_1.directive((value) => (part) => {
     const previousValue = part.value;
     // First, can we update the current TemplateInstance, or do we need to move
     // the current nodes into the cache?
-    if (previousValue instanceof template_instance_js_1.TemplateInstance) {
-        if (value instanceof lit_html_js_1.TemplateResult &&
+    if (previousValue instanceof template_instance_1.TemplateInstance) {
+        if (value instanceof lit_html_1.TemplateResult &&
             previousValue.template === part.options.templateFactory(value)) {
             // Same Template, just trigger an update of the TemplateInstance
             part.setValue(value);
@@ -59,11 +59,11 @@ exports.cache = lit_html_js_1.directive((value) => (part) => {
                 };
                 templateCache.set(previousValue.template, cachedTemplate);
             }
-            lit_html_js_1.reparentNodes(cachedTemplate.nodes, part.startNode.nextSibling, part.endNode);
+            lit_html_1.reparentNodes(cachedTemplate.nodes, part.startNode.nextSibling, part.endNode);
         }
     }
     // Next, can we reuse nodes from the cache?
-    if (value instanceof lit_html_js_1.TemplateResult) {
+    if (value instanceof lit_html_1.TemplateResult) {
         const template = part.options.templateFactory(value);
         const cachedTemplate = templateCache.get(template);
         if (cachedTemplate !== undefined) {

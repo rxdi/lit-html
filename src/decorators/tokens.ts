@@ -1,7 +1,16 @@
 import { CSSResult } from '../lit-element/lib/css-tag';
 import { CSSResultArray } from '../lit-element/lit-element';
-import { Subscription } from 'rxjs';
 import { TemplateResult } from '../lit-html/lit-html';
+
+export declare class Subscription {
+  static EMPTY: Subscription;
+  closed: boolean;
+  protected _parentOrParents: Subscription | Subscription[];
+  private _subscriptions;
+  constructor(unsubscribe?: () => void);
+  unsubscribe(): void;
+}
+
 
 export class RXDIElement extends HTMLElement {
   public static setElement?<T>(component: T, document: RXDIElement): T;

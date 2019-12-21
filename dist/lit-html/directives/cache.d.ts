@@ -11,7 +11,7 @@
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-import { Part } from '../lit-html.js';
+import { Part } from '../lit-html';
 /**
  * Enables fast switching between multiple templates by caching the DOM nodes
  * and TemplateInstances produced by the templates.

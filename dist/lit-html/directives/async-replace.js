@@ -28,7 +28,7 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const lit_html_js_1 = require("../lit-html.js");
+const lit_html_1 = require("../lit-html");
 /**
  * A directive that renders the items of an async iterable[1], replacing
  * previous values with new values, so that only one value is ever rendered
@@ -47,9 +47,9 @@ const lit_html_js_1 = require("../lit-html.js");
  * @param mapper An optional function that maps from (value, index) to another
  *     value. Useful for generating templates for each item in the iterable.
  */
-exports.asyncReplace = lit_html_js_1.directive((value, mapper) => (part) => __awaiter(this, void 0, void 0, function* () {
+exports.asyncReplace = lit_html_1.directive((value, mapper) => (part) => __awaiter(this, void 0, void 0, function* () {
     var e_1, _a;
-    if (!(part instanceof lit_html_js_1.NodePart)) {
+    if (!(part instanceof lit_html_1.NodePart)) {
         throw new Error('asyncReplace can only be used in text bindings');
     }
     // If we've already set up this particular iterable, we don't need
@@ -59,7 +59,7 @@ exports.asyncReplace = lit_html_js_1.directive((value, mapper) => (part) => __aw
     }
     // We nest a new part to keep track of previous item values separately
     // of the iterable as a value itself.
-    const itemPart = new lit_html_js_1.NodePart(part.options);
+    const itemPart = new lit_html_1.NodePart(part.options);
     part.value = value;
     let i = 0;
     try {

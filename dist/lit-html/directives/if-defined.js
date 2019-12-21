@@ -13,15 +13,15 @@
  * http://polymer.github.io/PATENTS.txt
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const lit_html_js_1 = require("../lit-html.js");
+const lit_html_1 = require("../lit-html");
 /**
  * For AttributeParts, sets the attribute if the value is defined and removes
  * the attribute if the value is undefined.
  *
  * For other part types, this directive is a no-op.
  */
-exports.ifDefined = lit_html_js_1.directive((value) => (part) => {
-    if (value === undefined && part instanceof lit_html_js_1.AttributePart) {
+exports.ifDefined = lit_html_1.directive((value) => (part) => {
+    if (value === undefined && part instanceof lit_html_1.AttributePart) {
         if (value !== part.value) {
             const name = part.committer.name;
             part.committer.element.removeAttribute(name);

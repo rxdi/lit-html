@@ -13,7 +13,7 @@
  * http://polymer.github.io/PATENTS.txt
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const lit_html_js_1 = require("../lit-html.js");
+const lit_html_1 = require("../lit-html");
 /**
  * Stores the ClassInfo object applied to a given AttributePart.
  * Used to unset existing values when a new ClassInfo object is applied.
@@ -29,8 +29,8 @@ const classMapCache = new WeakMap();
  * `{foo: bar}` applies the class `foo` if the value of `bar` is truthy.
  * @param classInfo {ClassInfo}
  */
-exports.classMap = lit_html_js_1.directive((classInfo) => (part) => {
-    if (!(part instanceof lit_html_js_1.AttributePart) || (part instanceof lit_html_js_1.PropertyPart) ||
+exports.classMap = lit_html_1.directive((classInfo) => (part) => {
+    if (!(part instanceof lit_html_1.AttributePart) || (part instanceof lit_html_1.PropertyPart) ||
         part.committer.name !== 'class' || part.committer.parts.length > 1) {
         throw new Error('The `classMap` directive must be used in the `class` attribute ' +
             'and must be the only part in the attribute.');

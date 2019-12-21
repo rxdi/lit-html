@@ -11,9 +11,9 @@
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-import { RenderOptions } from './render-options.js';
-import { TemplateResult } from './template-result.js';
-export { html, svg, TemplateResult } from '../lit-html.js';
+import { RenderOptions } from './render-options';
+import { TemplateResult } from './template-result';
+export { html, svg, TemplateResult } from '../lit-html';
 export interface ShadyRenderOptions extends Partial<RenderOptions> {
     scopeName: string;
 }

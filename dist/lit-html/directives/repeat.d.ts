@@ -11,7 +11,7 @@
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-import { DirectiveFn } from '../lib/directive.js';
+import { DirectiveFn } from '../lib/directive';
 export declare type KeyFn<T> = (item: T, index: number) => unknown;
 export declare type ItemTemplate<T> = (item: T, index: number) => unknown;
 /**

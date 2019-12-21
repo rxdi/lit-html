@@ -13,7 +13,7 @@
  * http://polymer.github.io/PATENTS.txt
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const lit_html_js_1 = require("../lit-html.js");
+const lit_html_1 = require("../lit-html");
 /**
  * Stores the StyleInfo object applied to a given AttributePart.
  * Used to unset existing values when a new StyleInfo object is applied.
@@ -36,8 +36,8 @@ const styleMapCache = new WeakMap();
  *
  * @param styleInfo {StyleInfo}
  */
-exports.styleMap = lit_html_js_1.directive((styleInfo) => (part) => {
-    if (!(part instanceof lit_html_js_1.AttributePart) || (part instanceof lit_html_js_1.PropertyPart) ||
+exports.styleMap = lit_html_1.directive((styleInfo) => (part) => {
+    if (!(part instanceof lit_html_1.AttributePart) || (part instanceof lit_html_1.PropertyPart) ||
         part.committer.name !== 'style' || part.committer.parts.length > 1) {
         throw new Error('The `styleMap` directive must be used in the style attribute ' +
             'and must be the only part in the attribute.');

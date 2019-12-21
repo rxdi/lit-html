@@ -13,7 +13,7 @@
  * http://polymer.github.io/PATENTS.txt
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const lit_html_js_1 = require("../lit-html.js");
+const lit_html_1 = require("../lit-html");
 const previousValues = new WeakMap();
 /**
  * Prevents re-render of a template function until a single value or an array of
@@ -48,7 +48,7 @@ const previousValues = new WeakMap();
  * @param value the value to check before re-rendering
  * @param f the template function
  */
-exports.guard = lit_html_js_1.directive((value, f) => (part) => {
+exports.guard = lit_html_1.directive((value, f) => (part) => {
     const previousValue = previousValues.get(part);
     if (Array.isArray(value)) {
         // Dirty-check arrays by item

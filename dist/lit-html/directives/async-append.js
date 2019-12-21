@@ -28,7 +28,7 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const lit_html_js_1 = require("../lit-html.js");
+const lit_html_1 = require("../lit-html");
 /**
  * A directive that renders the items of an async iterable[1], appending new
  * values after previous values, similar to the built-in support for iterables.
@@ -46,9 +46,9 @@ const lit_html_js_1 = require("../lit-html.js");
  * @param mapper An optional function that maps from (value, index) to another
  *     value. Useful for generating templates for each item in the iterable.
  */
-exports.asyncAppend = lit_html_js_1.directive((value, mapper) => (part) => __awaiter(this, void 0, void 0, function* () {
+exports.asyncAppend = lit_html_1.directive((value, mapper) => (part) => __awaiter(this, void 0, void 0, function* () {
     var e_1, _a;
-    if (!(part instanceof lit_html_js_1.NodePart)) {
+    if (!(part instanceof lit_html_1.NodePart)) {
         throw new Error('asyncAppend can only be used in text bindings');
     }
     // If we've already set up this particular iterable, we don't need
@@ -93,14 +93,14 @@ exports.asyncAppend = lit_html_js_1.directive((value, mapper) => (part) => __awa
             // Check to see if we have a previous item and Part
             if (itemPart !== undefined) {
                 // Create a new node to separate the previous and next Parts
-                itemStartNode = lit_html_js_1.createMarker();
+                itemStartNode = lit_html_1.createMarker();
                 // itemPart is currently the Part for the previous item. Set
                 // it's endNode to the node we'll use for the next Part's
                 // startNode.
                 itemPart.endNode = itemStartNode;
                 part.endNode.parentNode.insertBefore(itemStartNode, part.endNode);
             }
-            itemPart = new lit_html_js_1.NodePart(part.options);
+            itemPart = new lit_html_1.NodePart(part.options);
             itemPart.insertAfterNode(itemStartNode);
             itemPart.setValue(v);
             itemPart.commit();

@@ -11,7 +11,7 @@
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-import { Part } from '../lit-html.js';
+import { Part } from '../lit-html';
 /**
  * Prevents re-render of a template function until a single value or an array of
  * values changes.

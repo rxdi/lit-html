@@ -11,7 +11,7 @@
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-import { Part } from '../lit-html.js';
+import { Part } from '../lit-html';
 /**
  * Renders one of a series of values, including Promises, to a Part.
  *

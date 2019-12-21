@@ -12,7 +12,7 @@
  * http://polymer.github.io/PATENTS.txt
  */
 
-import {removeNodes, reparentNodes} from '../lib/dom.js';
+import {removeNodes, reparentNodes} from '../lib/dom';
 
 /**
  * A lightweight <template> polyfill that supports minimum features to cover

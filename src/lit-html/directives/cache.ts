@@ -12,9 +12,9 @@
  * http://polymer.github.io/PATENTS.txt
  */
 
-import {TemplateInstance} from '../lib/template-instance.js';
-import {Template} from '../lib/template.js';
-import {directive, NodePart, Part, reparentNodes, TemplateResult} from '../lit-html.js';
+import {TemplateInstance} from '../lib/template-instance';
+import {Template} from '../lib/template';
+import {directive, NodePart, Part, reparentNodes, TemplateResult} from '../lit-html';
 
 type CachedTemplate = {
   readonly instance: TemplateInstance,

@@ -1,5 +1,32 @@
 import { directive, Part } from '../lit-html/lit-html';
-import { Subscribable } from 'rxjs';
+export interface Unsubscribable {
+  unsubscribe(): void;
+}
+export interface Subscribable<T> {
+  /** @deprecated Use an observer instead of a complete callback */
+  subscribe(
+    next: null | undefined,
+    error: null | undefined,
+    complete: () => void
+  ): Unsubscribable;
+  /** @deprecated Use an observer instead of an error callback */
+  subscribe(
+    next: null | undefined,
+    error: (error: any) => void,
+    complete?: () => void
+  ): Unsubscribable;
+  /** @deprecated Use an observer instead of a complete callback */
+  subscribe(
+    next: (value: T) => void,
+    error: null | undefined,
+    complete: () => void
+  ): Unsubscribable;
+  subscribe(
+    next?: (value: T) => void,
+    error?: (error: any) => void,
+    complete?: () => void
+  ): Unsubscribable;
+}
 
 type SubscribableOrPromiseLike<T> = Subscribable<T> | PromiseLike<T>;
 
@@ -36,7 +63,7 @@ export const subscribe = directive(
         'subscribableOrPromiseLike must be a subscribable or a promise like'
       );
     }
- 
+
     // If we have already set up this subscribable in this part, we
     // don't need to do anything
     const previousValue = previousValues.get(part);

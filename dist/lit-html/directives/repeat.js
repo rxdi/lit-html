@@ -13,16 +13,16 @@
  * http://polymer.github.io/PATENTS.txt
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const lit_html_js_1 = require("../lit-html.js");
+const lit_html_1 = require("../lit-html");
 // Helper functions for manipulating parts
 // TODO(kschaaf): Refactor into Part API?
 const createAndInsertPart = (containerPart, beforePart) => {
     const container = containerPart.startNode.parentNode;
     const beforeNode = beforePart === undefined ? containerPart.endNode :
         beforePart.startNode;
-    const startNode = container.insertBefore(lit_html_js_1.createMarker(), beforeNode);
-    container.insertBefore(lit_html_js_1.createMarker(), beforeNode);
-    const newPart = new lit_html_js_1.NodePart(containerPart.options);
+    const startNode = container.insertBefore(lit_html_1.createMarker(), beforeNode);
+    container.insertBefore(lit_html_1.createMarker(), beforeNode);
+    const newPart = new lit_html_1.NodePart(containerPart.options);
     newPart.insertAfterNode(startNode);
     return newPart;
 };
@@ -36,11 +36,11 @@ const insertPartBefore = (containerPart, part, ref) => {
     const beforeNode = ref ? ref.startNode : containerPart.endNode;
     const endNode = part.endNode.nextSibling;
     if (endNode !== beforeNode) {
-        lit_html_js_1.reparentNodes(container, part.startNode, endNode, beforeNode);
+        lit_html_1.reparentNodes(container, part.startNode, endNode, beforeNode);
     }
 };
 const removePart = (part) => {
-    lit_html_js_1.removeNodes(part.startNode.parentNode, part.startNode, part.endNode.nextSibling);
+    lit_html_1.removeNodes(part.startNode.parentNode, part.startNode, part.endNode.nextSibling);
 };
 // Helper for generating a map of array item to its index over a subset
 // of an array (used to lazily generate `newKeyToIndexMap` and
@@ -74,7 +74,7 @@ const keyListCache = new WeakMap();
  * If no `keyFn` is provided, this directive will perform similar to mapping
  * items to values, and DOM will be reused against potentially different items.
  */
-exports.repeat = lit_html_js_1.directive((items, keyFnOrTemplate, template) => {
+exports.repeat = lit_html_1.directive((items, keyFnOrTemplate, template) => {
     let keyFn;
     if (template === undefined) {
         template = keyFnOrTemplate;
@@ -83,7 +83,7 @@ exports.repeat = lit_html_js_1.directive((items, keyFnOrTemplate, template) => {
         keyFn = keyFnOrTemplate;
     }
     return (containerPart) => {
-        if (!(containerPart instanceof lit_html_js_1.NodePart)) {
+        if (!(containerPart instanceof lit_html_1.NodePart)) {
             throw new Error('repeat can only be used in text bindings');
         }
         // Old part & key lists are retrieved from the last update

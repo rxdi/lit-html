@@ -16,7 +16,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * @module shady-render
  */
-const template_js_1 = require("./template.js");
+const template_1 = require("./template");
 const walkerNodeFilter = 133 /* NodeFilter.SHOW_{ELEMENT|COMMENT|TEXT} */;
 /**
  * Removes the list of nodes from a Template safely. In addition to removing
@@ -85,7 +85,7 @@ const countNodes = (node) => {
 const nextActiveIndexInTemplateParts = (parts, startIndex = -1) => {
     for (let i = startIndex + 1; i < parts.length; i++) {
         const part = parts[i];
-        if (template_js_1.isTemplatePartActive(part)) {
+        if (template_1.isTemplatePartActive(part)) {
             return i;
         }
     }

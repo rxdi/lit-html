@@ -1,9 +1,5 @@
 import { CSSResult } from '../lit-element/lib/css-tag';
-import { Component as RXDIElementComponent, Container } from '@rxdi/core';
 import { TemplateResult, html, render as renderer } from '../lit-html/lit-html';
-import { BehaviorSubject, isObservable, Subscription } from 'rxjs';
-import { Outlet } from '@rxdi/router';
-import { CSSResultArray } from '../lit-element/lit-element';
 import { RXDIElement } from './tokens';
 
 interface CustomElementConfig<T> {
@@ -76,13 +72,6 @@ const standardCustomElement = (
 //   Object.setPrototypeOf(CustomElement, HTMLElement);
 //   Object.setPrototypeOf(cls, CustomElement);
 
-const unfreezeRouterWhenUnmounted = () => {
-  let outlet: Outlet;
-  try {
-    outlet = Container.get<BehaviorSubject<Outlet>>('router-outlet').getValue();
-    outlet.unfreezeRouter();
-  } catch (e) {}
-};
 
 export const customElement = <T>(
   tag: string,
@@ -144,7 +133,7 @@ export const customElement = <T>(
   function mapToSubscriptions() {
     // Override subscribe method so we can set subscription to new Map() later when component is unmounted we can unsubscribe
     Object.keys(this).forEach(observable => {
-      if (isObservable(this[observable])) {
+      if (this[observable] && typeof this[observable].lift === 'function' && typeof this[observable].subscribe === 'function') {
         const original = this[observable].subscribe.bind(this[observable]);
         this[observable].subscribe = (cb, err) => {
           const subscribe = original(cb, err);
@@ -157,8 +146,13 @@ export const customElement = <T>(
   cls.prototype.disconnectedCallback = function() {
     if (config.providers && config.providers.length) {
       config.providers.forEach(provider => {
-        Container.reset(provider);
-        Container.remove(provider);
+        try {
+          const rxdi = '@rxdi/core';
+          const { Container } = require(rxdi);
+          Container.reset(provider);
+          Container.remove(provider);
+          
+        } catch (e) {}
       });
     }
     // Disconnect from all observables when component is about to unmount
@@ -166,7 +160,6 @@ export const customElement = <T>(
     cls.subscriptions.clear();
     OnDestroy.call(this);
     disconnectedCallback.call(this);
-    unfreezeRouterWhenUnmounted();
   };
   cls.prototype.render = function() {
     return render.call(this);
@@ -183,7 +176,11 @@ export const customElement = <T>(
   };
   cls.prototype.connectedCallback = function() {
     if (config.providers && config.providers.length) {
-      config.providers.forEach(provider => Container.get(provider));
+      try {
+        const rxdi = '@rxdi/core';
+        const { Container } = require(rxdi);
+        config.providers.forEach(provider => Container.get(provider));
+      } catch (e) {}
     }
     mapToSubscriptions.call(this);
     if (!config.template) {
@@ -222,7 +219,10 @@ export const customElement = <T>(
   } else {
     standardCustomElement(tag, cls, { extends: config.extends });
   }
-  RXDIElementComponent(config as any)(cls);
+  try {
+    const rxdi = '@rxdi/core';
+    require(rxdi).Component(config)(cls)
+  } catch (e) {}
 };
 
 export const Component = <T>(config: CustomElementConfig<T>) =>

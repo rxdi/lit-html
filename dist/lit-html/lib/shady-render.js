@@ -24,17 +24,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Do not remove this comment; it keeps typedoc from misplacing the module
  * docs.
  */
-const dom_js_1 = require("./dom.js");
-const modify_template_js_1 = require("./modify-template.js");
-const render_js_1 = require("./render.js");
-const template_factory_js_1 = require("./template-factory.js");
-const template_instance_js_1 = require("./template-instance.js");
-const template_result_js_1 = require("./template-result.js");
-const template_js_1 = require("./template.js");
-var lit_html_js_1 = require("../lit-html.js");
-exports.html = lit_html_js_1.html;
-exports.svg = lit_html_js_1.svg;
-exports.TemplateResult = lit_html_js_1.TemplateResult;
+const dom_1 = require("./dom");
+const modify_template_1 = require("./modify-template");
+const render_1 = require("./render");
+const template_factory_1 = require("./template-factory");
+const template_instance_1 = require("./template-instance");
+const template_result_1 = require("./template-result");
+const template_1 = require("./template");
+var lit_html_1 = require("../lit-html");
+exports.html = lit_html_1.html;
+exports.svg = lit_html_1.svg;
+exports.TemplateResult = lit_html_1.TemplateResult;
 // Get a key to lookup in `templateCaches`.
 const getTemplateCacheKey = (type, scopeName) => `${type}--${scopeName}`;
 let compatibleShadyCSSVersion = true;
@@ -53,26 +53,26 @@ else if (typeof window['ShadyCSS'].prepareTemplateDom === 'undefined') {
  */
 const shadyTemplateFactory = (scopeName) => (result) => {
     const cacheKey = getTemplateCacheKey(result.type, scopeName);
-    let templateCache = template_factory_js_1.templateCaches.get(cacheKey);
+    let templateCache = template_factory_1.templateCaches.get(cacheKey);
     if (templateCache === undefined) {
         templateCache = {
             stringsArray: new WeakMap(),
             keyString: new Map()
         };
-        template_factory_js_1.templateCaches.set(cacheKey, templateCache);
+        template_factory_1.templateCaches.set(cacheKey, templateCache);
     }
     let template = templateCache.stringsArray.get(result.strings);
     if (template !== undefined) {
         return template;
     }
-    const key = result.strings.join(template_js_1.marker);
+    const key = result.strings.join(template_1.marker);
     template = templateCache.keyString.get(key);
     if (template === undefined) {
         const element = result.getTemplateElement();
         if (compatibleShadyCSSVersion) {
             window['ShadyCSS'].prepareTemplateDom(element, scopeName);
         }
-        template = new template_js_1.Template(result, element);
+        template = new template_1.Template(result, element);
         templateCache.keyString.set(key, template);
     }
     templateCache.stringsArray.set(result.strings, template);
@@ -84,7 +84,7 @@ const TEMPLATE_TYPES = ['html', 'svg'];
  */
 const removeStylesFromLitTemplates = (scopeName) => {
     TEMPLATE_TYPES.forEach((type) => {
-        const templates = template_factory_js_1.templateCaches.get(getTemplateCacheKey(type, scopeName));
+        const templates = template_factory_1.templateCaches.get(getTemplateCacheKey(type, scopeName));
         if (templates !== undefined) {
             templates.keyString.forEach((template) => {
                 const { element: { content } } = template;
@@ -93,7 +93,7 @@ const removeStylesFromLitTemplates = (scopeName) => {
                 Array.from(content.querySelectorAll('style')).forEach((s) => {
                     styles.add(s);
                 });
-                modify_template_js_1.removeNodesFromTemplate(template, styles);
+                modify_template_1.removeNodesFromTemplate(template, styles);
             });
         }
     });
@@ -142,7 +142,7 @@ const prepareTemplateStyles = (renderedDOM, template, scopeName) => {
     // And then put the condensed style into the "root" template passed in as
     // `template`.
     const content = template.element.content;
-    modify_template_js_1.insertNodeIntoTemplate(template, condensedStyle, content.firstChild);
+    modify_template_1.insertNodeIntoTemplate(template, condensedStyle, content.firstChild);
     // Note, it's important that ShadyCSS gets the template that `lit-html`
     // will actually render so that it can update the style inside when
     // needed (e.g. @apply native Shadow DOM case).
@@ -165,7 +165,7 @@ const prepareTemplateStyles = (renderedDOM, template, scopeName) => {
         content.insertBefore(condensedStyle, content.firstChild);
         const removes = new Set();
         removes.add(condensedStyle);
-        modify_template_js_1.removeNodesFromTemplate(template, removes);
+        modify_template_1.removeNodesFromTemplate(template, removes);
     }
 };
 /**
@@ -229,16 +229,16 @@ exports.render = (result, container, options) => {
         throw new Error('The `scopeName` option is required.');
     }
     const scopeName = options.scopeName;
-    const hasRendered = render_js_1.parts.has(container);
+    const hasRendered = render_1.parts.has(container);
     const needsScoping = compatibleShadyCSSVersion &&
         container.nodeType === 11 /* Node.DOCUMENT_FRAGMENT_NODE */ &&
-        !!container.host && result instanceof template_result_js_1.TemplateResult;
+        !!container.host && result instanceof template_result_1.TemplateResult;
     // Handle first render to a scope specially...
     const firstScopeRender = needsScoping && !shadyRenderSet.has(scopeName);
     // On first scope render, render into a fragment; this cannot be a single
     // fragment that is reused since nested renders can occur synchronously.
     const renderContainer = firstScopeRender ? document.createDocumentFragment() : container;
-    render_js_1.render(result, renderContainer, Object.assign({ templateFactory: shadyTemplateFactory(scopeName) }, options));
+    render_1.render(result, renderContainer, Object.assign({ templateFactory: shadyTemplateFactory(scopeName) }, options));
     // When performing first scope render,
     // (1) We've rendered into a fragment so that there's a chance to
     // `prepareTemplateStyles` before sub-elements hit the DOM
@@ -249,14 +249,14 @@ exports.render = (result, container, options) => {
     // container knows its `part` is the one we just rendered. This ensures
     // DOM will be re-used on subsequent renders.
     if (firstScopeRender) {
-        const part = render_js_1.parts.get(renderContainer);
-        render_js_1.parts.delete(renderContainer);
-        if (part.value instanceof template_instance_js_1.TemplateInstance) {
+        const part = render_1.parts.get(renderContainer);
+        render_1.parts.delete(renderContainer);
+        if (part.value instanceof template_instance_1.TemplateInstance) {
             prepareTemplateStyles(renderContainer, part.value.template, scopeName);
         }
-        dom_js_1.removeNodes(container, container.firstChild);
+        dom_1.removeNodes(container, container.firstChild);
         container.appendChild(renderContainer);
-        render_js_1.parts.set(container, part);
+        render_1.parts.set(container, part);
     }
     // After elements have hit the DOM, update styling if this is the
     // initial render to this container.

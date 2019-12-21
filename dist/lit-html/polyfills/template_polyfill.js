@@ -13,7 +13,7 @@
  * http://polymer.github.io/PATENTS.txt
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const dom_js_1 = require("../lib/dom.js");
+const dom_1 = require("../lib/dom");
 /**
  * A lightweight <template> polyfill that supports minimum features to cover
  * lit-html use cases. It provides an alternate route in case <template> is not
@@ -45,8 +45,8 @@ exports.initTemplatePolyfill = (forced = false) => {
                 } }),
             innerHTML: Object.assign({}, descriptor, { set: function (text) {
                     body.innerHTML = text;
-                    dom_js_1.removeNodes(content, content.firstChild);
-                    dom_js_1.reparentNodes(content, body.firstChild);
+                    dom_1.removeNodes(content, content.firstChild);
+                    dom_1.reparentNodes(content, body.firstChild);
                 } }),
         });
     };
